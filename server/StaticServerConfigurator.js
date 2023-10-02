@@ -9,6 +9,8 @@ function StaticServerConfigurator() {
   this.start = function(express, app) {
 
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
+    var loginUsername = properties.frontend.loginCredentials.loginUsername;
+    var loginPassword = properties.frontend.loginCredentials.loginPassword;
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -61,7 +63,7 @@ function StaticServerConfigurator() {
         if(typeof req.session.hasAlreadyEntered === 'undefined' || typeof req.session.signinStarted === 'undefined'){
           if(properties.server.enableWelcomePage === true){
             req.session.hasAlreadyEntered = true;
-            res.redirect("/access");
+            res.redirect("/public/login");
             return;
           }
         }
@@ -138,8 +140,8 @@ function StaticServerConfigurator() {
         logger.error("Public login is enabled")
         var requestId = getRequestId(req)
         var params = {
-          "email": req.body.publicEmail, 
-          "password": req.body.publicPassword
+          "email": loginUsername,
+          "password": loginPassword
         }
 
         publicLoginRestClient.authenticate(params, requestId, function (error, response) {
