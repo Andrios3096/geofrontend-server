@@ -3,6 +3,7 @@ const PublicLoginRestClient = require('../login/PublicLoginRestClient.js');
 var httpContext = require('express-http-context');
 var path = require('path');
 const uuid = require('uuid');
+const fetch = require("isomorphic-fetch");
 
 function StaticServerConfigurator() {
 
