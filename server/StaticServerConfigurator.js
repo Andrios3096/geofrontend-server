@@ -137,50 +137,27 @@ function StaticServerConfigurator() {
     app.use(express.urlencoded({extended:false}))
 
     app.post('/public/login', function(req, res) {
-      if(properties.server.security.configModule.enablePublicLogin === true){
+      if(properties.server.security.configModule.enablePublicLogin === true) {
 
         logger.error("Public login is enabled")
         var requestId = getRequestId(req)
 
-        var reCaptchaIsValid = false
-        const response_key = req.body["g-recaptcha-response"];
-        // Put secret key here, which we get from google console
-        const secret_key = properties.server.security.configModule.recaptcha.privateKey;
+        var params = {
+          "email": loginUsername,
+          "password": loginPassword
+        }
 
-        const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
-
-        logger.info(url);
-
-        validationRecaptcha(url).then(
-
-          async response => {
-
-            reCaptchaIsValid=response;
-
-            if(reCaptchaIsValid){
-
-              var params = {
-                "email": loginUsername,
-                "password": loginPassword
-              }
-
-              publicLoginRestClient.authenticate(params, requestId, function (error, response) {
-                if(response !== null){
-                  logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
-                  req.session.publicUserInformation = response;
-                  res.redirect("/horus/public/login")
-                } else {
-                  logger.error(error)
-                  res.redirect("/public/login");
-                }
-              })
-
-            }
+        publicLoginRestClient.authenticate(params, requestId, function (error, response) {
+          if(response !== null){
+            logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
+            req.session.publicUserInformation = response;
+            res.redirect("/horus/public/login")
+          } else {
+            logger.error(error)
+            res.redirect("/public/login");
           }
-        )
-
-
-      }else{
+        })
+      } else {
         logger.error("Public login is disabled")
         res.redirect("/");
       }
