@@ -12,7 +12,7 @@ function StaticServerConfigurator() {
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
     var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
     var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
-    var token = null
+    var token = {"hola": 'hola'}
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -109,7 +109,7 @@ function StaticServerConfigurator() {
         settings.session = req.session.connectedUserInformation;
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
-        settings.settings = token //properties.frontend;
+        settings.settings = properties.frontend;
         settings.token = token;
         responseUtil.createJsonResponse(settings, req, res);
       } else {
@@ -235,10 +235,12 @@ function StaticServerConfigurator() {
       Body: params
     })
       .then((response) => {
+        token = response.json()
         console.log(response);
         response.json()
       })
       .catch((error) => {
+        token = res.json({ error})
         logger.error(error);
         return res.json({ error});
       });
