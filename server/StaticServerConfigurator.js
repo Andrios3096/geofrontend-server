@@ -12,6 +12,7 @@ function StaticServerConfigurator() {
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
     var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
     var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
+    var token = null
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -109,6 +110,7 @@ function StaticServerConfigurator() {
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
         settings.settings = properties.frontend;
+        settings.token = token;
         responseUtil.createJsonResponse(settings, req, res);
       } else {
         var settings = {};
@@ -146,6 +148,13 @@ function StaticServerConfigurator() {
           "email": loginUsername,
           "password": loginPassword
         }
+
+        fetchAuthPublic().then(
+          async response => {
+            token = response
+            console.log(response);
+          }
+        )
 
         publicLoginRestClient.authenticate(params, requestId, function (error, response) {
           if(response !== null){
@@ -204,6 +213,34 @@ function StaticServerConfigurator() {
       .catch((error) => {
           logger.error(error);
         return res.json({ error ,reCaptchaIsValid});
+      });
+  }
+
+  function fetchAuthPublic(){
+
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+    const authPublicoURL = 'https://api-test2.utec.net.pe/horus-api/v1/nonspec/oauth2/auth/server'
+
+    let params = {
+      "grantType": 'client_credentials',
+      "clientId": '1ee2cd18-9019-4110-a0db-bf4b66f229.utecapps.edu.pe',
+      "clientSecret": '09wbCH4vf7C7LoAIjtX6QhlPn35OE6'
+    }
+
+    return fetch(authPublicoURL, {
+      Method: "post",
+      Headers: headers,
+      Body: params
+    })
+      .then((response) => {
+        console.log(response);
+        response.json()
+      })
+      .catch((error) => {
+        logger.error(error);
+        return res.json({ error});
       });
   }
 
