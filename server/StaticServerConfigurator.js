@@ -10,8 +10,8 @@ function StaticServerConfigurator() {
   this.start = function(express, app) {
 
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
-    var loginUsername = properties.frontend.loginCredentials.loginUsername;
-    var loginPassword = properties.frontend.loginCredentials.loginPassword;
+    var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
+    var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
 
     logger.info("Security:" + (properties.server.security.enable));
 
