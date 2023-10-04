@@ -109,7 +109,7 @@ function StaticServerConfigurator() {
         settings.session = req.session.connectedUserInformation;
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
-        settings.settings = properties.frontend;
+        settings.settings = token //properties.frontend;
         settings.token = token;
         responseUtil.createJsonResponse(settings, req, res);
       } else {
