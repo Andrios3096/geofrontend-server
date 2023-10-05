@@ -117,10 +117,11 @@ function StaticServerConfigurator() {
             tokenParams = response.content
             settings.token = tokenParams;
             console.log("token",token);
+
+            responseUtil.createJsonResponse(settings, req, res);
           }
         )
 
-        responseUtil.createJsonResponse(settings, req, res);
       } else {
         var settings = {};
         settings.session = {};
