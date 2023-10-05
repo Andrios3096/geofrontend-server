@@ -115,12 +115,12 @@ function StaticServerConfigurator() {
         .then(
           async response => {
             tokenParams = response.content
-            settings.token = tokenParams;
             console.log("token",token);
-
-            responseUtil.createJsonResponse(settings, req, res);
           }
         )
+        
+        settings.token = tokenParams;
+        responseUtil.createJsonResponse(settings, req, res);
 
       } else {
         var settings = {};
@@ -248,7 +248,7 @@ function StaticServerConfigurator() {
     })
       .then((response) => {
         console.log(response);
-        response.json()
+        return response.json();
       })
       .catch((error) => {
         logger.error(error);
