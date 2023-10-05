@@ -157,16 +157,20 @@ function StaticServerConfigurator() {
         //   }
         // )
 
-        publicLoginRestClient.authenticate(params, requestId, function (error, response) {
-          if(response !== null){
+        console.log("token", token);
+        console.log("loginUsername", loginUsername);
+        console.log("loginPassword", loginPassword);
+
+        // publicLoginRestClient.authenticate(params, requestId, function (error, response) {
+        //   if(response !== null){
             logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
             req.session.publicUserInformation = response;
             res.redirect("/horus/public/login")
-          } else {
-            logger.error(error)
-            res.redirect("/public/login");
-          }
-        })
+        //   } else {
+        //     logger.error(error)
+        //     res.redirect("/public/login");
+        //   }
+        // })
       } else {
         logger.error("Public login is disabled")
         res.redirect("/");
@@ -219,6 +223,8 @@ function StaticServerConfigurator() {
 
   function fetchAuthPublic(){
 
+    console.log("entro");
+
     const headers = {
       'Content-Type': 'application/json'
     }
@@ -230,10 +236,14 @@ function StaticServerConfigurator() {
       "clientSecret": '09wbCH4vf7C7LoAIjtX6QhlPn35OE6'
     }
 
+    console.log(headers);
+    console.log(authPublicoURL);
+    console.log(JSON.stringify(params));
+
     return fetch(authPublicoURL, {
-      Method: "post",
-      Headers: headers,
-      Body: params
+      method: "post",
+      headers: headers,
+      body: JSON.stringify(params)
     })
       .then((response) => {
         console.log(response);
@@ -241,7 +251,7 @@ function StaticServerConfigurator() {
       })
       .catch((error) => {
         logger.error(error);
-        return res.json({ error});
+        return error;
       });
   }
 
