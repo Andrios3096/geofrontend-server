@@ -223,7 +223,7 @@ function StaticServerConfigurator() {
     const headers = {
       'Content-Type': 'application/json'
     }
-    const authPublicoURL = properties.server.security.configModule.horusBaseUrl + properties.server.security.configModule.horusApi.authPublicURL;
+    const authPublicoURL = properties.server.security.configModule.horusBaseUrl + properties.server.security.configModule.horusApi.authPublicoURL;
 
     let params = {
       "clientId": properties.server.security.configModule.horusApi.clientId,
