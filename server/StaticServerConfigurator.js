@@ -103,6 +103,14 @@ function StaticServerConfigurator() {
     // here call to internal systems or whatever to get data
     app.get('/settings.json', hasProtectedAccess, function(req, res) {
 
+      fetchAuthPublic()
+      .then(
+        async response => {
+          token = response.content
+          console.log("token",token);
+        }
+      )
+
       if (req.session.connectedUserInformation) {
         var settings = {};
         settings.session = {};
@@ -148,14 +156,6 @@ function StaticServerConfigurator() {
           "email": loginUsername,
           "password": loginPassword
         }
-
-        fetchAuthPublic()
-        .then(
-          async response => {
-            token = response.content
-            console.log("token",token);
-          }
-        )
 
         console.log("loginUsername", loginUsername);
         console.log("loginPassword", loginPassword);
