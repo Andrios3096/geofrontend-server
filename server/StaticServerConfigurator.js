@@ -12,7 +12,7 @@ function StaticServerConfigurator() {
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
     var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
     var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
-    var tokenParams = {"hola": 'hola'}
+    var tokenParam = "";
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -110,7 +110,7 @@ function StaticServerConfigurator() {
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
         settings.settings = properties.frontend;
-        settings.settings.horusApi.token = tokenParams;
+        settings.settings.horusApi.accessToken = tokenParam;
         responseUtil.createJsonResponse(settings, req, res);
 
       } else {
@@ -153,8 +153,8 @@ function StaticServerConfigurator() {
         fetchAuthPublic()
         .then(
           async response => {
-            tokenParams = response.content.accessToken
-            console.log("token",token);
+            tokenParam = response.content.accessToken
+            console.log("tokenParam",tokenParam);
           }
         )
 
@@ -220,22 +220,16 @@ function StaticServerConfigurator() {
 
   function fetchAuthPublic(){
 
-    console.log("entro");
-
     const headers = {
       'Content-Type': 'application/json'
     }
-    const authPublicoURL = 'https://api-test2.utec.net.pe/horus-api/v1/nonspec/oauth2/auth/server'
+    const authPublicoURL = properties.server.security.configModule.horusApi.authPublicoURL;
 
     let params = {
-      "grantType": 'client_credentials',
-      "clientId": '1ee2cd18-9019-4110-a0db-bf4b66f229.utecapps.edu.pe',
-      "clientSecret": '09wbCH4vf7C7LoAIjtX6QhlPn35OE6'
+      "clientId": properties.server.security.configModule.horusApi.clientId,
+      "clientSecret": properties.server.security.configModule.horusApi.clientSecret,
+      "grantType": properties.server.security.configModule.horusApi.grantType
     }
-
-    console.log(headers);
-    console.log(authPublicoURL);
-    console.log(JSON.stringify(params));
 
     return fetch(authPublicoURL, {
       method: "post",
