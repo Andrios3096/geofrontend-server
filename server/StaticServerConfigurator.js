@@ -110,16 +110,7 @@ function StaticServerConfigurator() {
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
         settings.settings = properties.frontend;
-
-        fetchAuthPublic()
-        .then(
-          async response => {
-            tokenParams = response.content
-            console.log("token",token);
-          }
-        )
-        
-        settings.token = tokenParams;
+        settings.settings.horusApi.token = tokenParams;
         responseUtil.createJsonResponse(settings, req, res);
 
       } else {
@@ -159,8 +150,13 @@ function StaticServerConfigurator() {
           "password": loginPassword
         }
 
-        console.log("loginUsername", loginUsername);
-        console.log("loginPassword", loginPassword);
+        fetchAuthPublic()
+        .then(
+          async response => {
+            tokenParams = response.content.accessToken
+            console.log("token",token);
+          }
+        )
 
         publicLoginRestClient.authenticate(params, requestId, function (error, response) {
           if(response !== null){
