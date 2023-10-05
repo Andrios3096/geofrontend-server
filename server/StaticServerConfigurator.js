@@ -12,7 +12,7 @@ function StaticServerConfigurator() {
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
     var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
     var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
-    var token = {"hola": 'hola'}
+    var token = {"hola": 'qwer'}
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -149,12 +149,13 @@ function StaticServerConfigurator() {
           "password": loginPassword
         }
 
-        fetchAuthPublic().then(
-          async response => {
-            token = response
-            console.log(response);
-          }
-        )
+        token = fetchAuthPublic()
+        // .then(
+        //   async response => {
+        //     token = response
+        //     console.log(response);
+        //   }
+        // )
 
         publicLoginRestClient.authenticate(params, requestId, function (error, response) {
           if(response !== null){
@@ -235,12 +236,10 @@ function StaticServerConfigurator() {
       Body: params
     })
       .then((response) => {
-        token = response.json()
         console.log(response);
         response.json()
       })
       .catch((error) => {
-        token = res.json({ error})
         logger.error(error);
         return res.json({ error});
       });
