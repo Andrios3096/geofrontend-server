@@ -12,7 +12,7 @@ function StaticServerConfigurator() {
     var publicLoginRestClient = new PublicLoginRestClient(properties.server.security.configModule.publicLoginBaseUrl);
     var loginUsername = properties.server.security.configModule.loginCredentials.loginUsername;
     var loginPassword = properties.server.security.configModule.loginCredentials.loginPassword;
-    var token = {"hola": 'qwer'}
+    var tokenParams = {"hola": 'hola'}
 
     logger.info("Security:" + (properties.server.security.enable));
 
@@ -103,14 +103,6 @@ function StaticServerConfigurator() {
     // here call to internal systems or whatever to get data
     app.get('/settings.json', hasProtectedAccess, function(req, res) {
 
-      fetchAuthPublic()
-      .then(
-        async response => {
-          token = response.content
-          console.log("token",token);
-        }
-      )
-
       if (req.session.connectedUserInformation) {
         var settings = {};
         settings.session = {};
@@ -118,7 +110,16 @@ function StaticServerConfigurator() {
         settings.session.allowed = req.session.allowed;
         settings.session.expiredSession = false;
         settings.settings = properties.frontend;
-        settings.token = token;
+
+        fetchAuthPublic()
+        .then(
+          async response => {
+            tokenParams = response.content
+            settings.token = tokenParams;
+            console.log("token",token);
+          }
+        )
+
         responseUtil.createJsonResponse(settings, req, res);
       } else {
         var settings = {};
