@@ -149,28 +149,27 @@ function StaticServerConfigurator() {
           "password": loginPassword
         }
 
-        token = fetchAuthPublic()
-        // .then(
-        //   async response => {
-        //     token = response
-        //     console.log(response);
-        //   }
-        // )
+        fetchAuthPublic()
+        .then(
+          async response => {
+            token = response.content
+            console.log("token",token);
+          }
+        )
 
-        console.log("token", token);
         console.log("loginUsername", loginUsername);
         console.log("loginPassword", loginPassword);
 
-        // publicLoginRestClient.authenticate(params, requestId, function (error, response) {
-        //   if(response !== null){
+        publicLoginRestClient.authenticate(params, requestId, function (error, response) {
+          if(response !== null){
             logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
             req.session.publicUserInformation = response;
             res.redirect("/horus/public/login")
-        //   } else {
-        //     logger.error(error)
-        //     res.redirect("/public/login");
-        //   }
-        // })
+          } else {
+            logger.error(error)
+            res.redirect("/public/login");
+          }
+        })
       } else {
         logger.error("Public login is disabled")
         res.redirect("/");
