@@ -158,16 +158,16 @@ function StaticServerConfigurator() {
           }
         )
 
-        // publicLoginRestClient.authenticate(params, requestId, function (error, response) {
-        //   if(response !== null){
-            // logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
-            // req.session.publicUserInformation = response;
+        publicLoginRestClient.authenticate(params, requestId, function (error, response) {
+          if(response !== null){
+            logger.info("Sending to horus/public/login in horusOauthSecurityStrategy")
+            req.session.publicUserInformation = response;
             res.redirect("/horus/public/login")
-        //   } else {
-        //     logger.error(error)
-        //     res.redirect("/public/login");
-        //   }
-        // })
+          } else {
+            logger.error(error)
+            res.redirect("/public/login");
+          }
+        })
       } else {
         logger.error("Public login is disabled")
         res.redirect("/");
@@ -223,7 +223,7 @@ function StaticServerConfigurator() {
     const headers = {
       'Content-Type': 'application/json'
     }
-    const authPublicoURL = properties.server.security.configModule.horusBaseUrl + properties.server.security.configModule.horusApi.authPublicoURL;
+    const authPublicoURL = properties.server.security.configModule.horusBaseUrl + properties.server.security.configModule.horusApi.authPublicURL;
 
     let params = {
       "clientId": properties.server.security.configModule.horusApi.clientId,
